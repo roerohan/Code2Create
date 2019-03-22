@@ -1,0 +1,12 @@
+
+
+>> Construction Manager end: creates profile (mgr_profile). Can connect with other manager profiles. Under profile, can create construction project (Project). Every project has construction tasks associated with it (tasks). Tasks can be tendered to contractors. Managers can send tender proposal requests for one, some, or all tasks associated with a project to contractors registered on the platform. Contractors respond with tender proposals (proposals). Proposals can be sorted according to pricing or contractor rating. Further recommendation system can recommend contractors based on preferences of connected managers (using minimum spanning tree clustering). Managers can rate contractors based on the job they have performed. Payment system (maybe). Legal contract through blockchain.
+
+>> Contractor end: creates profile (cnt_profile). Can connect with other cnt_profiles to recieve manager recommendations. Can browse mgr_profiles to find contracts; can view contents of mgr_profiles/project  (ie can view tasks and projects in manager profiles). Can make tender proposals by selecting one or more tasks. Can improve work prospects through rank system (better rank => more work) and finding work through browsing tasks.
+
+>>To-do list:
+- prepare UI
+- prepare backend
+- write mst clustering algo
+- implement immutable legally binding payment agreements through blockchain
+- implement payments (maybe)
