@@ -63,6 +63,14 @@ def login(request, type_of_user)
             return HttpResponseNotFound("<h1>Requested page does not exist</h1>")
 
 @csrf_exempt
+def logout(request):
+    if "manager" in request.session:
+        del request.session["manager"]
+    if "contractor" in request.session:
+        del request.session["contractor"]
+    return HttpResponse("Success")
+
+@csrf_exempt
 def tender_request(request):
     if request.session['manager']:
         manager = Manager.objects.get(id=manager_id)
@@ -87,6 +95,15 @@ def request_tender(request):
         link.task = task
         link.save()
         # Send notification to manager
+
+@csrf_exempt
+def accept_request(request):
+    is_accepted = request.POST.get("is_accepted") in ["True", "true", "t", "T"]
+    if is_accepted == False:
+        Link.objects.filter(id=link_id).delete()
+    else:
+        Link.objects.filter(id=link_id).update(status='o')
+
 
 @csrf_exempt
 def close_request(request):
