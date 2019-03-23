@@ -28,3 +28,4 @@ class Link(models.Model):
     contractor = models.ForeignKey(Contractor, on_delete=models.SET_NULL, null=True)
     task = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True)
     requested_by = models.CharField(max_length=1, choices=[("m", "manager"), ("c", "contractor")])
+    status = models.CharField(max_length=1, choices=[("o", "open"), ("c", "closed")], null=True)

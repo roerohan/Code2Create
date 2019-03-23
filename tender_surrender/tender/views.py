@@ -50,7 +50,7 @@ def tender_request(request):
     manager = Manager.objects.get(id=manager_id)
     contractor = Contractor.objects.get(id=contractor_id)
     task = Task.objects.get(id=task_id)
-    link = Link(requested_by='m')
+    link = Link(requested_by='m', status='o')
     link.manager = manager
     link.contractor = contractor
     link.task = task
@@ -62,9 +62,16 @@ def request_tender(request):
     manager = Manager.objects.get(id=manager_id)
     contractor = Contractor.objects.get(id=contractor_id)
     task = Task.objects.get(id=task_id)
-    link = Link(requested_by='c')
+    link = Link(requested_by='c', status='o')
     link.manager = manager
     link.contractor = contractor
     link.task = task
     link.save()
     # Send notification to manager
+
+@csrf_exempt
+def close_request(request):
+    link_id = request.POST.get("link_id")
+    link = Link.objects.get(id="link_id")
+    link.status='c'
+    link.save()
