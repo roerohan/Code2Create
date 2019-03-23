@@ -46,28 +46,47 @@ def add_task(request, project_id):
         return HttpResponse("Added")
 
 @csrf_exempt
+def login(request, type_of_user)
+    name = request.POST.get("name")
+    password = request.POST.get("password")
+    if type_of_user == 'm':
+        try:
+            user = Manager.objects.get(name=name, password=password)
+            request.session["manager"]=True
+        except Manager.DoesNotExist:
+            return HttpResponseNotFound("<h1>Requested page does not exist</h1>")
+    else:
+        try:
+            user = Contractor.objects.get(name=name, password=password)
+            request.session["contractor"]=True
+        except Contractor.DoesNotExist:
+            return HttpResponseNotFound("<h1>Requested page does not exist</h1>")
+
+@csrf_exempt
 def tender_request(request):
-    manager = Manager.objects.get(id=manager_id)
-    contractor = Contractor.objects.get(id=contractor_id)
-    task = Task.objects.get(id=task_id)
-    link = Link(requested_by='m', status='o')
-    link.manager = manager
-    link.contractor = contractor
-    link.task = task
-    link.save()
-    # Send notification to contractors
+    if request.session['manager']:
+        manager = Manager.objects.get(id=manager_id)
+        contractor = Contractor.objects.get(id=contractor_id)
+        task = Task.objects.get(id=task_id)
+        link = Link(requested_by='m', status='o')
+        link.manager = manager
+        link.contractor = contractor
+        link.task = task
+        link.save()
+        # Send notification to contractors
 
 @csrf_exempt
 def request_tender(request):
-    manager = Manager.objects.get(id=manager_id)
-    contractor = Contractor.objects.get(id=contractor_id)
-    task = Task.objects.get(id=task_id)
-    link = Link(requested_by='c', status='o')
-    link.manager = manager
-    link.contractor = contractor
-    link.task = task
-    link.save()
-    # Send notification to manager
+    if request.session['contractor']:
+        manager = Manager.objects.get(id=manager_id)
+        contractor = Contractor.objects.get(id=contractor_id)
+        task = Task.objects.get(id=task_id)
+        link = Link(requested_by='c', status='o')
+        link.manager = manager
+        link.contractor = contractor
+        link.task = task
+        link.save()
+        # Send notification to manager
 
 @csrf_exempt
 def close_request(request):
