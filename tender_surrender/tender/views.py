@@ -4,12 +4,13 @@ from .models import Manager, Contractor, Project, Task, Link
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
-def add_user(request, type_of_user):
+def add_user(request):
     if request.method == 'GET':
         return HttpResponseNotFound("<h1>Requested page does not exist</h1>")
     else:
         name = request.POST.get("name");
         password = request.POST.get("password")
+        type_of_user = request.POST.get("type_of_user")
         if type_of_user == 'c':
             new_contractor = Contractor(name=name, password=password)
             new_contractor.save()
@@ -46,19 +47,23 @@ def add_task(request, project_id):
         return HttpResponse("Added")
 
 @csrf_exempt
-def login(request, type_of_user)
+def login(request):
     name = request.POST.get("name")
     password = request.POST.get("password")
-    if type_of_user == 'm':
-        try:
-            user = Manager.objects.get(name=name, password=password)
-            request.session["manager"]=True
-        except Manager.DoesNotExist:
-            return HttpResponseNotFound("<h1>Requested page does not exist</h1>")
-    else:
+    f=0
+    try:
+        user = Manager.objects.get(name=name, password=password)
+        request.session["manager"]=True
+        f=1
+        return render(request, 'tender/manager-dashboard.html')
+
+    except Manager.DoesNotExist:
+        pass
+    if f==0:
         try:
             user = Contractor.objects.get(name=name, password=password)
             request.session["contractor"]=True
+            return HttpResponse("success - contractor")
         except Contractor.DoesNotExist:
             return HttpResponseNotFound("<h1>Requested page does not exist</h1>")
 
@@ -111,3 +116,6 @@ def close_request(request):
     link = Link.objects.get(id="link_id")
     link.status='c'
     link.save()
+
+def home(request):
+    return render(request, "tender/index.html")
